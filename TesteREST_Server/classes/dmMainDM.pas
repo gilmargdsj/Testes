@@ -6,7 +6,8 @@ uses
   System.SysUtils, System.Classes, Data.DB, DBAccess, Uni, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
-  FireDAC.Phys.PG, FireDAC.Phys.PGDef, FireDAC.Comp.Client, MemDS, clsTDBUtils;
+  FireDAC.Phys.PG, FireDAC.Phys.PGDef, FireDAC.Comp.Client, MemDS, clsTDBUtils,
+  UniProvider, PostgreSQLUniProvider;
 
 type
   TMainDM = class(TDataModule)
@@ -16,6 +17,7 @@ type
     usuariosnome: TStringField;
     usuariosnasc: TDateField;
     usuariosemail: TStringField;
+    PostgreSQLUniProvider1: TPostgreSQLUniProvider;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -42,7 +44,7 @@ implementation
 
 procedure TMainDM.DataModuleCreate(Sender: TObject);
 begin
-  Self.DBUtils := TDBUtils.Create(TComponent(Self), Self.StringDeConexao);
+//  Self.DBUtils := TDBUtils.Create(TComponent(Self), Self.StringDeConexao);
 end;
 
 procedure TMainDM.SetDBUtils(const Value: TDBUtils);

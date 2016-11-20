@@ -13,9 +13,10 @@ uses
   WebModuleUnit1 in 'WebModuleUnit1.pas' {WebModule1: TWebModule},
   clsTDBUtils in 'classes\clsTDBUtils.pas',
   clsTUsuario in 'classes\clsTUsuario.pas',
-  dmMainDM in 'classes\dmMainDM.pas' {MainDM: TDataModule},
   ClientClassesUnit1 in 'ClientClassesUnit1.pas',
-  ClientModuleUnit1 in 'ClientModuleUnit1.pas' {ClientModule1: TDataModule};
+  ClientModuleUnit1 in 'ClientModuleUnit1.pas' {ClientModule1: TDataModule},
+  clsTUsuarioDAO in 'classes\clsTUsuarioDAO.pas',
+  clsTUsuarioDTO in 'classes\clsTUsuarioDTO.pas';
 
 {$R *.res}
 
@@ -24,7 +25,6 @@ begin
     WebRequestHandler.WebModuleClass := WebModuleClass;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
-  Application.CreateForm(TMainDM, MainDM);
   Application.CreateForm(TClientModule1, ClientModule1);
   Application.Run;
 end.

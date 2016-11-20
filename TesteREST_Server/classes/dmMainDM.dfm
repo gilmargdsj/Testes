@@ -7,7 +7,7 @@ object MainDM: TMainDM
     Port = 5432
     Database = 'WeBuy'
     Username = 'postgres'
-    Server = '192.168.0.23'
+    Server = '192.168.0.68'
     LoginPrompt = False
     Left = 128
     Top = 40
@@ -67,5 +67,9 @@ object MainDM: TMainDM
       FieldName = 'email'
       Size = 200
     end
+  end
+  object PostgreSQLUniProvider1: TPostgreSQLUniProvider
+    Left = 256
+    Top = 64
   end
 end
