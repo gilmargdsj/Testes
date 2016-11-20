@@ -38,13 +38,15 @@ begin
   Self.FOwner := AOwner;
   // 'Provider Name=PostgreSQL;Login Prompt=False;Data Source=192.168.0.116;User ID=postgres;Password=bitnami;Database=WeBuy;Port=5432';
   Self.FConexao.ConnectString := StringDeConexao;
-  Self.FConexao.Connect;
+  // Self.FConexao.Connect;
 end;
 
 function TDBUtils.QueryFactory(Statement: String): TColDevQuery;
 begin
   Result := TColDevQuery(TUniQuery).Create(Self.Owner);
   Result.Connection := Self.Conexao;
+  if not Result.Connection.Connected then
+    Result.Connection.Connect;
   Result.SQL.Add(Statement);
 end;
 

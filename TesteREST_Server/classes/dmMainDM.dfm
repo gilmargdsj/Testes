@@ -7,7 +7,7 @@ object MainDM: TMainDM
     Port = 5432
     Database = 'WeBuy'
     Username = 'postgres'
-    Server = '192.168.0.116'
+    Server = '192.168.0.23'
     LoginPrompt = False
     Left = 128
     Top = 40
@@ -16,9 +16,30 @@ object MainDM: TMainDM
   object usuarios: TUniQuery
     SQLInsert.Strings = (
       'INSERT INTO usuarios.usuarios'
-      '  (id_usuario, nome, nasc)'
+      '  (id_usuario, nome, nasc, email)'
       'VALUES'
-      '  (:id_usuario, :nome, :nasc)')
+      '  (:id_usuario, :nome, :nasc, :email)')
+    SQLDelete.Strings = (
+      'DELETE FROM usuarios.usuarios'
+      'WHERE'
+      '  email = :Old_email')
+    SQLUpdate.Strings = (
+      'UPDATE usuarios.usuarios'
+      'SET'
+      
+        '  id_usuario = :id_usuario, nome = :nome, nasc = :nasc, email = ' +
+        ':email'
+      'WHERE'
+      '  email = :Old_email')
+    SQLLock.Strings = (
+      'SELECT * FROM usuarios.usuarios'
+      'WHERE'
+      '  email = :Old_email'
+      'FOR UPDATE NOWAIT')
+    SQLRefresh.Strings = (
+      'SELECT id_usuario, nome, nasc, email FROM usuarios.usuarios'
+      'WHERE'
+      '  email = :email')
     SQLRecCount.Strings = (
       'SELECT count(*) FROM ('
       'SELECT * FROM usuarios.usuarios'
@@ -30,6 +51,7 @@ object MainDM: TMainDM
     Left = 128
     Top = 96
     object usuariosid_usuario: TLargeintField
+      AutoGenerateValue = arAutoInc
       FieldName = 'id_usuario'
     end
     object usuariosnome: TStringField
