@@ -16,7 +16,9 @@ uses
   ClientClassesUnit1 in 'ClientClassesUnit1.pas',
   ClientModuleUnit1 in 'ClientModuleUnit1.pas' {ClientModule1: TDataModule},
   clsTUsuarioDAO in 'classes\clsTUsuarioDAO.pas',
-  clsTUsuarioDTO in 'classes\clsTUsuarioDTO.pas';
+  clsTUsuarioDTO in 'classes\clsTUsuarioDTO.pas',
+  libRecordTypes in 'classes\libRecordTypes.pas',
+  libEnumTypes in 'classes\libEnumTypes.pas';
 
 {$R *.res}
 

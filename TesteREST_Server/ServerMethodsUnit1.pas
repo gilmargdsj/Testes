@@ -28,38 +28,28 @@ implementation
 
 uses System.StrUtils,
      clsTUsuario,
-     clsTDBUtils;
+     libEnumTypes;
 
 function TServerMethods1.updateUsuario(Value: String): String;
 var
   usu: TUsuario;
-
 begin
   usu := TUsuario.Create;
-  usu.DTO.ID := 1;
-  usu.DTO.Nome := 'Teste';
-  usu.DTO.Nasc := EncodeDate(2016,10,30);
-  Result := usu.ToJSON;
+  usu.FromJSON(Value);
+  usu.Persiste(todUpdate);
+  Result := '1';
+  FreeAndNil(usu);
 end;
 
 function TServerMethods1.Usuario(Value: String): String;
 var
   usu: TUsuario;
-  dbu: TDBUtils;
-  q: TColDevQuery;
 begin
-  dbu:=TDBUtils.Create(Self, '');
-  q:=dbu.QueryFactory('SELECT * FROM USUARIOS.USUARIOS WHERE ID_USUARIO ='+Value);
-  q.Open;
-  if not q.Eof then
-  begin
-    usu := TUsuario.Create;
-    usu.DTO.ID := q.Fields.FieldByName('id_usuario').AsInteger;
-    usu.DTO.Nome := q.Fields.FieldByName('nome').AsString;
-    usu.DTO.Nasc := q.Fields.FieldByName('nasc').AsDateTime;
-    usu.DTO.Email := q.Fields.FieldByName('email').AsString;
-  end;
+  usu := TUsuario.Create;
+  usu.DTO.ID := StrToInt(Value);
+  usu.Persiste(todSelect);
   Result := usu.ToJSON;
+  FreeAndNil(usu);
 end;
 
 function TServerMethods1.EchoString(Value: string): string;
@@ -72,10 +62,10 @@ var
   usu: TUsuario;
 begin
   usu := TUsuario.Create;
-  usu.DTO.ID := 1;
-  usu.DTO.Nome := 'Teste';
-  usu.DTO.Nasc := EncodeDate(2016,10,30);
+  usu.FromJSON(Value);
+  usu.Persiste(todInsert);
   Result := usu.ToJSON;
+  FreeAndNil(usu);
 end;
 
 function TServerMethods1.cancelUsuario(Value: String): String;
@@ -83,15 +73,16 @@ var
   usu: TUsuario;
 begin
   usu := TUsuario.Create;
-  usu.DTO.ID := 1;
-  usu.DTO.Nome := 'Teste';
-  usu.DTO.Nasc := EncodeDate(2016,10,30);
-  Result := usu.ToJSON;
+  usu.FromJSON(Value);
+  usu.Persiste(todDelete);
+  Result := '1';
+  FreeAndNil(usu);
 end;
 
 function TServerMethods1.ReverseString(Value: string): string;
 begin
   Result := System.StrUtils.ReverseString(Value);
 end;
+
 end.
 

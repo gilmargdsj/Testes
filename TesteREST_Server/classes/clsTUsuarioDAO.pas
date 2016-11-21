@@ -16,12 +16,12 @@ type
   public
     constructor Create;
     destructor Destroy;
+  published
     property DBUtils: TDBUtils read FDBUtils;
     function Get(const ID: Integer): TUsuarioDTO;
     function Post(const ID: Integer; const Usuario: TUsuarioDTO): Boolean;
     function Put(var Usuario: TUsuarioDTO): Boolean;
     function Delete(const ID: Integer): Boolean; overload;
-    function Delete(const Usuario: TUsuarioDTO): Boolean; overload;
   end;
 
 implementation
@@ -45,23 +45,6 @@ var
 begin
   try
     q:=Self.FDBUtils.QueryFactory('DELETE FROM USUARIOS.USUARIOS WHERE ID_USUARIO = '+IntToStr(ID));
-    q.ExecSQL;
-    FreeAndNil(q);
-  except
-    on E:Exception do
-    begin
-      FreeAndNil(q);
-      raise Exception.Create('Impossível excluir o usuário - erro : '+E.Message);
-    end;
-  end;
-end;
-
-function TUsuarioDAO.Delete(const Usuario: TUsuarioDTO): Boolean;
-var
-  q: TColDevQuery;
-begin
-  try
-    q:=Self.FDBUtils.QueryFactory('DELETE FROM USUARIOS.USUARIOS WHERE ID_USUARIO = '+IntToStr(Usuario.ID));
     q.ExecSQL;
     FreeAndNil(q);
   except
@@ -101,8 +84,26 @@ begin
 end;
 
 function TUsuarioDAO.Post(const ID: Integer; const Usuario: TUsuarioDTO): Boolean;
+var
+  q: TColDevQuery;
 begin
-
+  Result := False;
+  try
+    q:=Self.FDBUtils.QueryFactory('SELECT * FROM USUARIOS.USUARIOS WHERE ID_USUARIO ='+IntToStr(ID));
+    q.Open;
+    if not q.Eof then
+    begin
+      q.Edit;
+      q.Fields.FieldByName('nome').AsString := Usuario.Nome;
+      q.Fields.FieldByName('nasc').AsDateTime := Usuario.Nasc;
+      q.Fields.FieldByName('email').AsString := Usuario.Email;
+      q.Post;
+    end;
+    FreeAndNil(q);
+    Result := True;
+  except
+    Result := False;
+  end;
 end;
 
 function TUsuarioDAO.Put(var Usuario: TUsuarioDTO): Boolean;
