@@ -60,27 +60,43 @@ function TUsuarioDAO.Get(const ID: Integer): TUsuarioDTO;
 var
   q: TColDevQuery;
 begin
-  q:=Self.FDBUtils.QueryFactory('SELECT * FROM USUARIOS.USUARIOS WHERE ID_USUARIO ='+IntToStr(ID));
-  q.Open;
-  if not q.Eof then
-  begin
-    Result := TUsuarioDTO.Create;
-    Result.ID := q.Fields.FieldByName('id_usuario').AsInteger;
-    Result.Nome := q.Fields.FieldByName('nome').AsString;
-    Result.Nasc := q.Fields.FieldByName('nasc').AsDateTime;
-    Result.Email := q.Fields.FieldByName('email').AsString;
+  try
+    q:=Self.FDBUtils.QueryFactory('SELECT * FROM USUARIOS.USUARIOS WHERE ID_USUARIO ='+IntToStr(ID));
+    q.Open;
+    if not q.Eof then
+    begin
+      Result := TUsuarioDTO.Create;
+      Result.ID := q.Fields.FieldByName('id_usuario').AsInteger;
+      Result.Nome := q.Fields.FieldByName('nome').AsString;
+      Result.Nasc := q.Fields.FieldByName('nasc').AsDateTime;
+      Result.Email := q.Fields.FieldByName('email').AsString;
+    end;
+    FreeAndNil(q);
+  except
+    on E:Exception do
+    begin
+      FreeAndNil(q);
+      raise Exception.Create('Impossível recuperar o usuário - erro : '+E.Message);
+    end;
   end;
-  FreeAndNil(q);
 end;
 
 function TUsuarioDAO.GetLastID: Integer;
 var
   q: TColDevQuery;
 begin
-  q:=Self.FDBUtils.QueryFactory('select nextval('+QuotedStr('usuarios.seq_id_usuario')+')');
-  q.Open;
-  Result := q.Fields.Fields[0].AsInteger;
-  FreeAndNil(q);
+  try
+    q:=Self.FDBUtils.QueryFactory('select nextval('+QuotedStr('usuarios.seq_id_usuario')+')');
+    q.Open;
+    Result := q.Fields.Fields[0].AsInteger;
+    FreeAndNil(q);
+  except
+    on E:Exception do
+    begin
+      FreeAndNil(q);
+      raise Exception.Create('Impossível recuperar novo ID para usuário - erro : '+E.Message);
+    end;
+  end;
 end;
 
 function TUsuarioDAO.Post(const ID: Integer; const Usuario: TUsuarioDTO): Boolean;
@@ -102,7 +118,11 @@ begin
     FreeAndNil(q);
     Result := True;
   except
-    Result := False;
+    on E:Exception do
+    begin
+      FreeAndNil(q);
+      raise Exception.Create('Impossível atualizar o usuário - erro : '+E.Message);
+    end;
   end;
 end;
 
@@ -110,18 +130,24 @@ function TUsuarioDAO.Put(var Usuario: TUsuarioDTO): Boolean;
 var
   q: TColDevQuery;
 begin
-  Usuario.ID := Self.GetLastID;
-//  q:=Self.FDBUtils.QueryFactory('INSERT INTO USUARIOS.USUARIOS (id_usuario, nome, nasc, email) values(:id_usuario, :nome, :email, cast(:nasc as date))');
-  q:=Self.FDBUtils.QueryFactory('SELECT * FROM USUARIOS.USUARIOS LIMIT 1');
-  q.Open;
-  q.Insert;
-  q.FieldByName('id_usuario').AsInteger := Usuario.ID;
-  q.FieldByName('nome').AsString := Usuario.Nome;
-  q.FieldByName('email').AsString := Usuario.Email;
-  q.FieldByName('nasc').AsDateTime := Usuario.Nasc;
-  if q.ParamCheck then
-    q.ExecSQL;
-  FreeAndNil(q);
+  try
+    q:=Self.FDBUtils.QueryFactory('SELECT * FROM USUARIOS.USUARIOS LIMIT 1');
+    q.Open;
+    q.Insert;
+    q.FieldByName('id_usuario').AsInteger := Self.GetLastID;
+    Usuario.ID := q.FieldByName('id_usuario').AsInteger;
+    q.FieldByName('nome').AsString := Usuario.Nome;
+    q.FieldByName('email').AsString := Usuario.Email;
+    q.FieldByName('nasc').AsDateTime := Usuario.Nasc;
+    q.Post;
+    FreeAndNil(q);
+  except
+    on E:Exception do
+    begin
+      FreeAndNil(q);
+      raise Exception.Create('Impossível incluir o usuário - erro : '+E.Message);
+    end;
+  end;
 end;
 
 end.

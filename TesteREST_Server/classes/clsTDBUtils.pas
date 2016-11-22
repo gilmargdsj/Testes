@@ -56,6 +56,7 @@ begin
   end;
 
   try
+    Self.FConexao.AutoCommit := True;
     Self.FConexao.Connect;
   except
     on E:Exception do
