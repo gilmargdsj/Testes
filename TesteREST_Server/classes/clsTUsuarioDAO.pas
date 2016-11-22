@@ -111,11 +111,14 @@ var
   q: TColDevQuery;
 begin
   Usuario.ID := Self.GetLastID;
-  q:=Self.FDBUtils.QueryFactory('INSERT INTO USUARIOS.USUARIOS (id_usuario, nome, nasc, email) values(:id_usuario, :nome, :email, :nasc)');
-  q.ParamByName('id_usuario').AsInteger := Usuario.ID;
-  q.ParamByName('nome').AsString := Usuario.Nome;
-  q.ParamByName('email').AsString := Usuario.Email;
-  q.ParamByName('nasc').AsDate := Usuario.Nasc;
+//  q:=Self.FDBUtils.QueryFactory('INSERT INTO USUARIOS.USUARIOS (id_usuario, nome, nasc, email) values(:id_usuario, :nome, :email, cast(:nasc as date))');
+  q:=Self.FDBUtils.QueryFactory('SELECT * FROM USUARIOS.USUARIOS LIMIT 1');
+  q.Open;
+  q.Insert;
+  q.FieldByName('id_usuario').AsInteger := Usuario.ID;
+  q.FieldByName('nome').AsString := Usuario.Nome;
+  q.FieldByName('email').AsString := Usuario.Email;
+  q.FieldByName('nasc').AsDateTime := Usuario.Nasc;
   if q.ParamCheck then
     q.ExecSQL;
   FreeAndNil(q);

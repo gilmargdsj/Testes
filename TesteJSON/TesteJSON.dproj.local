@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2016/11/22 01:05:10.000.301,=C:\Users\gilmargdsj\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2016/11/22 01:07:27.000.098,C:\Users\gilmargdsj\Documents\Embarcadero\Studio\Projects\Unit2.dfm=C:\Fontes\Testes\testes\TesteJSON\Unit2.dfm</Transaction>
+    <Transaction>2016/11/22 01:07:27.000.098,C:\Users\gilmargdsj\Documents\Embarcadero\Studio\Projects\Unit2.pas=C:\Fontes\Testes\testes\TesteJSON\Unit2.pas</Transaction>
+    <Transaction>2016/11/22 01:07:50.000.488,C:\Users\gilmargdsj\Documents\Embarcadero\Studio\Projects\Project2.dproj=C:\Fontes\Testes\testes\TesteJSON\TesteJSON.dproj</Transaction>
+    <Transaction>2016/11/22 01:12:03.000.347,=C:\Fontes\Testes\testes\TesteJSON\classes\libRecordTypes.pas</Transaction>
+    <Transaction>2016/11/22 01:12:03.000.297,=C:\Fontes\Testes\testes\TesteJSON\classes\libEnumTypes.pas</Transaction>
+    <Transaction>2016/11/22 01:12:03.000.242,=C:\Fontes\Testes\testes\TesteJSON\classes\clsTUsuarioDTO.pas</Transaction>
+    <Transaction>2016/11/22 01:12:03.000.142,=C:\Fontes\Testes\testes\TesteJSON\classes\clsTUsuario.pas</Transaction>
+    <Transaction>2016/11/22 01:12:03.000.096,=C:\Fontes\Testes\testes\TesteJSON\classes\clsTDBUtils.pas</Transaction>
+    <Transaction>2016/11/22 01:12:03.000.189,=C:\Fontes\Testes\testes\TesteJSON\classes\clsTUsuarioDAO.pas</Transaction>
+  </Transactions>
+</BorlandProject>
