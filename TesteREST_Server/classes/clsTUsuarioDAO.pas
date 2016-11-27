@@ -18,7 +18,8 @@ type
     destructor Destroy;
   published
     property DBUtils: TDBUtils read FDBUtils;
-    function Get(const ID: Integer): TUsuarioDTO;
+    // function Get(const ID: Integer): TUsuarioDTO; overload;
+    function Get(const EMail: String): TUsuarioDTO;
     function Post(const ID: Integer; const Usuario: TUsuarioDTO): Boolean;
     function Put(var Usuario: TUsuarioDTO): Boolean;
     function Delete(const ID: Integer): Boolean; overload;
@@ -55,7 +56,7 @@ begin
     end;
   end;
 end;
-
+{
 function TUsuarioDAO.Get(const ID: Integer): TUsuarioDTO;
 var
   q: TColDevQuery;
@@ -63,6 +64,30 @@ begin
   try
     q:=Self.FDBUtils.QueryFactory('SELECT * FROM USUARIOS.USUARIOS WHERE ID_USUARIO ='+IntToStr(ID));
     q.Open;
+    if not q.Eof then
+    begin
+      Result := TUsuarioDTO.Create;
+      Result.ID := q.Fields.FieldByName('id_usuario').AsInteger;
+      Result.Nome := q.Fields.FieldByName('nome').AsString;
+      Result.Nasc := q.Fields.FieldByName('nasc').AsDateTime;
+      Result.Email := q.Fields.FieldByName('email').AsString;
+    end;
+    FreeAndNil(q);
+  except
+    on E:Exception do
+    begin
+      FreeAndNil(q);
+      raise Exception.Create('Impossível recuperar o usuário - erro : '+E.Message);
+    end;
+  end;
+end;
+}
+function TUsuarioDAO.Get(const EMail: String): TUsuarioDTO;
+var
+  q: TColDevQuery;
+begin
+  try
+    q:=Self.FDBUtils.QueryFactory('SELECT * FROM USUARIOS.USUARIOS WHERE EMAIL ='+QuotedStr(EMail), True);
     if not q.Eof then
     begin
       Result := TUsuarioDTO.Create;

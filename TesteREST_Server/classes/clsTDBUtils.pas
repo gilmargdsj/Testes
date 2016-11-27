@@ -27,7 +27,7 @@ type
     property Owner: TComponent read FOwner write SetOwner;
     property Conexao: TColDevConnection read FConexao write SetConexao;
   published
-    function QueryFactory(const Statement: String): TColDevQuery;
+    function QueryFactory(const Statement: String; OpenIt: Boolean = False): TColDevQuery;
     function ResetQuery(var Query: TColDevQuery): Boolean;
     function SetQuery(var Query: TColDevQuery; const Statement: String): Boolean;
   end;
@@ -66,13 +66,15 @@ begin
   end;
 end;
 
-function TDBUtils.QueryFactory(const Statement: String): TColDevQuery;
+function TDBUtils.QueryFactory(const Statement: String; OpenIt: Boolean = False): TColDevQuery;
 begin
   Result := TColDevQuery.Create(Self.Owner);
   Result.Connection := Self.Conexao;
   if not Result.Connection.Connected then
     Result.Connection.Connect;
   Result.SQL.Add(Statement);
+  if OpenIt then
+    Result.Open;
 end;
 
 function TDBUtils.ResetQuery(var Query: TColDevQuery): Boolean;

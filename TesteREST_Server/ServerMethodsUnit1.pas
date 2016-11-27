@@ -34,10 +34,10 @@ function TServerMethods1.updateUsuario(Value: String): String;
 var
   usu: TUsuario;
 begin
-  usu := TUsuario.Create;
-  usu.FromJSON(Value);
+  usu := TUsuario.Create(Value);
+  //usu.FromJSON(Value);
   usu.Persiste(todUpdate);
-  Result := '1';
+  Result := usu.ToJSON;
   FreeAndNil(usu);
 end;
 
@@ -46,7 +46,7 @@ var
   usu: TUsuario;
 begin
   usu := TUsuario.Create;
-  usu.DTO.ID := StrToInt(Value);
+  usu.DTO.Email := Value;
   usu.Persiste(todSelect);
   Result := usu.ToJSON;
   FreeAndNil(usu);
@@ -61,8 +61,8 @@ function TServerMethods1.acceptUsuario(Value: String): String;
 var
   usu: TUsuario;
 begin
-  usu := TUsuario.Create;
-  usu.FromJSON(Value);
+  usu := TUsuario.Create(Value);
+  //usu.FromJSON(Value);
   usu.Persiste(todInsert);
   Result := usu.ToJSON;
   FreeAndNil(usu);
@@ -72,10 +72,10 @@ function TServerMethods1.cancelUsuario(Value: String): String;
 var
   usu: TUsuario;
 begin
-  usu := TUsuario.Create;
-  usu.FromJSON(Value);
+  usu := TUsuario.Create(Value);
+  //usu.FromJSON(Value);
   usu.Persiste(todDelete);
-  Result := '1';
+  Result := 'Usuario "'+usu.DTO.Nome+'" excluído';
   FreeAndNil(usu);
 end;
 

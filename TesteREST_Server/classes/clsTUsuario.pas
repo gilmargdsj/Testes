@@ -6,6 +6,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.JSON,
+  System.Rtti,
   REST.JSON,
   Data.DBXJSON,
   Data.DBXJSONReflect,
@@ -40,15 +41,47 @@ type
 
 implementation
 
+uses
+  System.DateUtils;
+
 { TUsuario }
 
 procedure TUsuario.RegisterConverters;
 begin
 
+  self.FMarshal.RegisterConverter(
+      TUsuarioDTO, 'Fnasc',
+        function(Data: TObject; Field: string): string
+        var
+          ctx: TRttiContext;
+          date : TDateTime;
+          teste: String;
+        begin
+          date := ctx.GetType(Data.ClassType).GetField(Field).GetValue(Data).AsType<TDateTime>;
+          teste := ctx.GetType(Data.ClassType).GetField(Field).GetValue(Data).AsString;
+          Result := FormatDateTime('DD/MM/YYYY HH:NN:SS', date);
+        end);
+
 end;
 
 procedure TUsuario.RegisterReverters;
 begin
+
+  Self.FUnMarshal.RegisterReverter(
+      TUsuarioDTO, 'Fnasc',
+      procedure(Data: TObject; Field: string; Arg: string)
+      var
+        ctx: TRttiContext;
+        datetime: TDateTime;
+      begin
+        datetime := EncodeDateTime(StrToInt(Copy(Arg, 7, 4)),
+                                   StrToInt(Copy(Arg, 4, 2)),
+                                   StrToInt(Copy(Arg, 1, 2)),
+                                   StrToInt(Copy(Arg, 12, 2)),
+                                   StrToInt(Copy(Arg, 15, 2)),
+                                   StrToInt(Copy(Arg, 18, 2)), 0);
+        ctx.GetType(Data.ClassType).GetField(Field).SetValue(Data, datetime);
+      end);
 
 end;
 
@@ -135,7 +168,7 @@ end;
 function TUsuario.Persiste(Operacao: TOperacaoDAO): Boolean;
 begin
   Result := False;
-  case Operacao of
+      case Operacao of
     todInsert:
       begin
         Result := Self.FDAO.Put(Self.FDTO);
@@ -150,7 +183,7 @@ begin
       end;
     todSelect:
       begin
-        Self.FDTO := Self.FDAO.Get(Self.FDTO.ID);
+        Self.FDTO := Self.FDAO.Get(Self.FDTO.EMail);
         Result := True;
       end;
     else
@@ -162,5 +195,7 @@ function TUsuario.ToJSON: String;
 begin
   Result := Self.FMarshal.Marshal(Self.DTO).ToJSON;
 end;
+
+initialization
 
 end.
